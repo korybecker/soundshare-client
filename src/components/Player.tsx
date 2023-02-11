@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Sound } from "../interfaces/Sound";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { environment } from "../environment";
 
 import "../App.css";
 import "./Player.css";
@@ -61,7 +62,7 @@ const Player = ({
         setDeleting(true);
         try {
             const res = await axios.delete(
-                `${process.env.SERVER_URL}/api/v1/sound/${sound._id}`,
+                `${environment.API_URL}/api/v1/sound/${sound._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${userToken}`,
@@ -71,9 +72,10 @@ const Player = ({
                     },
                 }
             );
-            setSounds((prevSounds: Sound[]) =>
-                prevSounds.filter((s: Sound) => s._id !== sound._id)
-            );
+            // @ts-ignore
+            setSounds((prevSounds: Sound[]) => {
+                return prevSounds.filter((s: Sound) => s._id !== sound._id);
+            });
         } catch (error) {
             console.error(error);
         } finally {

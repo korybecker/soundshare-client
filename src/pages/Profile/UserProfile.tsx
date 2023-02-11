@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { environment } from "../../environment";
 import "./styles.css";
 
 import axios from "axios";
@@ -11,7 +12,7 @@ const UserProfile = () => {
     const [sounds, setSounds] = useState();
     useEffect(() => {
         axios
-            .get(`${process.env.SERVER_URL}/api/v1/user/${username}`)
+            .get(`${environment.API_URL}/api/v1/user/${username}`)
             .then((res) => {
                 const { name, pfpUrl } = res.data;
                 setUser({ name, pfpUrl, username });

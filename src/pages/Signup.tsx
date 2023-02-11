@@ -16,12 +16,12 @@ const Signup = () => {
         password: "",
     });
 
-    const [file, setFile] = useState();
+    const [file, setFile] = useState<string | Blob>("");
 
     const navigate = useNavigate();
     const { signup, error, isLoading } = useSignup();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const { email, name, username, password } = formState;
 
@@ -135,7 +135,8 @@ const Signup = () => {
                                 >
                                     Choose a profile picture <UploadIcon />
                                 </Button>
-                                {file && file.name}
+                                {file &&
+                                    (file instanceof Blob ? file.name : file)}
                             </label>
                         </div>
                     </FormControl>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Sound } from "../interfaces/Sound";
+import { environment } from "../environment";
 import "../App.css";
 
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -14,9 +15,7 @@ const Sounds = () => {
 
     const fetchData = async () => {
         if (sounds && sounds.length > 0) return sounds;
-        const { data } = await axios.get(
-            `${process.env.SERVER_URL}/api/v1/sound`
-        );
+        const { data } = await axios.get(`${environment.API_URL}/api/v1/sound`);
         setSounds(data);
     };
 

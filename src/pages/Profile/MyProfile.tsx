@@ -5,6 +5,7 @@ import Player from "../../components/Player";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import "./styles.css";
 import { Sound } from "../../interfaces/Sound";
+import { environment } from "../../environment";
 
 const UserProfile = () => {
     // const [user, setUser] = useState();
@@ -15,7 +16,7 @@ const UserProfile = () => {
         if (user) {
             const username = user.username;
             axios
-                .get(`${process.env.SERVER_URL}/api/v1/user/${username}`)
+                .get(`${environment.API_URL}/api/v1/user/${username}`)
                 .then((res) => {
                     const { name, pfpUrl } = res.data;
                     setSounds(res.data.sounds);

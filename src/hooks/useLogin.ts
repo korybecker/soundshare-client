@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useAuthContext } from './useAuthContext';
+import { environment } from '../environment';
 
 export const useLogin = () => {
 	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState<boolean | null>(null);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { dispatch } = useAuthContext();
 
@@ -13,7 +14,7 @@ export const useLogin = () => {
 		setError(null);
 
 		// try to login user
-		const response = await fetch(`${process.env.SERVER_URL}/api/v1/user/login`, {
+		const response = await fetch(`${environment.API_URL}/api/v1/user/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password }),

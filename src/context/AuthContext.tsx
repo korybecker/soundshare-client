@@ -1,14 +1,11 @@
-import React, {
-    createContext,
-    useReducer,
-    useEffect,
-    Reducer,
-    FC,
-} from "react";
+import { createContext, useReducer, useEffect, Reducer, Dispatch } from "react";
 
 import { User } from "../interfaces/User";
 
-export const AuthContext = createContext({
+export const AuthContext = createContext<{
+    user: State["user"];
+    dispatch: Dispatch<Action>;
+}>({
     user: {
         name: "",
         username: "",
@@ -36,10 +33,10 @@ interface Action {
     payload?: User;
 }
 
-export const authReducer = (state: State, action: Action) => {
+export const authReducer: Reducer<State, Action> = (state, action) => {
     switch (action.type) {
         case "LOGIN":
-            return { user: action.payload };
+            return { user: action.payload || null };
         case "LOGOUT":
             return { user: null };
         default:

@@ -1,30 +1,37 @@
-import { useState } from 'react';
-import { useAuthContext } from './useAuthContext';
+import { useState } from "react";
+import { useAuthContext } from "./useAuthContext";
+import { environment } from "../environment";
 
-import axios from 'axios';
+import { User } from "../interfaces/User";
+
+import axios from "axios";
 
 export const useSignup = () => {
-	const [error, setError] = useState(null);
-	const [isLoading, setIsLoading] = useState<boolean | null>(null);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const { dispatch } = useAuthContext();
+    const { dispatch } = useAuthContext();
 
-	const signup = async (data) => {
-		// const { email, name, username, password } = formState;
-		setIsLoading(true);
-		setError(null);
+    const signup = async (data: FormData) => {
+        setIsLoading(true);
+        setError(null);
 
-		axios
-			.post(`${process.env.SERVER_URL}/api/v1/user/signup`, data, {
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
-			})
-			.then((res) => {
-				dispatch({ type: 'LOGIN', payload: res });
-				setIsLoading(false);
-			})
-			.catch((err) => console.error(err));
-	};
-	return { signup, isLoading, error };
+        axios
+            .post(`${environment.API_URL}/api/v1/user/signup`, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                const user: User = res.data;
+                dispatch({ type: "LOGIN", payload: user });
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                setIsLoading(false);
+                console.error(err);
+            });
+    };
+    return { signup, isLoading, error };
 };

@@ -7,24 +7,27 @@ import UploadIcon from "@mui/icons-material/Upload";
 
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { environment } from "../environment";
 
 import "../App.css";
 
 import axios from "axios";
 
 const Upload = () => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [file, setFile] = useState(null);
-    const [error, setError] = useState("");
+    const [title, setTitle] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
+    const [file, setFile] = useState<File | null>(null);
+    const [error, setError] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { user } = useAuthContext();
 
-    const [isLoading, setIsLoading] = useState(false);
-
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.MouseEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        if (!user) {
+            return;
+        }
         e.preventDefault();
 
         if (title.length === 0) {
@@ -46,7 +49,7 @@ const Upload = () => {
         data.append("uploadedBy", user.userId);
 
         axios
-            .post(`${process.env.SERVER_URL}/api/v1/sound`, data, {
+            .post(`${environment.API_URL}/api/v1/sound`, data, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                     "Content-Type": "multipart/form-data",
