@@ -124,7 +124,16 @@ const Signup = () => {
                                     type="file"
                                     onChange={(e) => {
                                         if (!e.target.files) return;
-                                        setFile(e.target.files[0]);
+                                        const file = e.target.files[0];
+                                        file.arrayBuffer().then(
+                                            (arrayBuffer) => {
+                                                const fileWithName = new File(
+                                                    [arrayBuffer],
+                                                    file.name
+                                                );
+                                                setFile(fileWithName);
+                                            }
+                                        );
                                     }}
                                 ></input>
                                 <Button
