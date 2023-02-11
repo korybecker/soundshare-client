@@ -11,7 +11,7 @@ const About = () => {
             <Link to="/sounds">
                 <h3>View All Sounds</h3>
             </Link>
-            {user ? (
+            {user && user.username ? (
                 <Link to="/upload">
                     <h3>Upload a Sound</h3>
                 </Link>

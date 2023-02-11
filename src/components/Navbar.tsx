@@ -1,93 +1,96 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import HeadphonesIcon from '@mui/icons-material/Headphones';
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import HeadphonesIcon from "@mui/icons-material/Headphones";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { useLogout } from '../hooks/useLogout';
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useLogout } from "../hooks/useLogout";
+import { useAuthContext } from "../hooks/useAuthContext";
 
-import { Link } from 'react-router-dom';
-
-
+import { Link } from "react-router-dom";
 
 function ResponsiveAppBar() {
-	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-		null
-	);
-	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-		null
-	);
-	const { logout } = useLogout();
-	const { user } = useAuthContext();
-	const navigate = useNavigate();
+    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+        null
+    );
+    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+        null
+    );
+    const { logout } = useLogout();
+    const { user } = useAuthContext();
+    const navigate = useNavigate();
 
-	// fix pages to fit logged in status
-	const pages = user
-		? ['sounds', 'upload']
-		: ['sounds'];
-	
-	const settings = user ? ["profile", "logout"] : ["login", "signup"];
+    // fix pages to fit logged in status
+    const pages = user && user.username ? ["sounds", "upload"] : ["sounds"];
 
-		const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-			setAnchorElNav(event.currentTarget);
-		};
-		const handleCloseNavMenu = () => {
-			setAnchorElNav(null);
-		};
+    const settings =
+        user && user.username ? ["profile", "logout"] : ["login", "signup"];
 
-	const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorElUser(event.currentTarget);
-	};
-	const handleCloseUserMenu = () => {
-		setAnchorElUser(null);
-	};
+    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElNav(event.currentTarget);
+    };
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
 
-	const handleProfileButtons = (setting: string) => {
-		if (setting === 'logout') {
-			logout();
-			navigate('/');
-		} else {
-			navigate(`/${setting}`);
-		}
-	};
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElUser(event.currentTarget);
+    };
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
 
-	return (
-		<>
-			<AppBar position="static" style={{ background: '#696969' }}>
-				<Container maxWidth="xl">
-					<Toolbar disableGutters>
-						<HeadphonesIcon sx={{ display: { xs: 'none', md: 'flex' }, mb: "0.25rem", mr: 1 }} />
-						<Typography
-							variant="h6"
-							noWrap
-							component={Link}
-							to="/"
-							sx={{
-								mr: 2,
-								display: { xs: 'none', md: 'flex' },
-								fontFamily: 'monospace',
-								fontWeight: 700,
-								letterSpacing: '.3rem',
-								color: 'inherit',
-								textDecoration: 'none',
-							}}
-						>
-							SoundShare
-						</Typography>
-						<Box
+    const handleProfileButtons = (setting: string) => {
+        if (setting === "logout") {
+            logout();
+            navigate("/");
+        } else {
+            navigate(`/${setting}`);
+        }
+    };
+
+    return (
+        <>
+            <AppBar position="static" style={{ background: "#696969" }}>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <HeadphonesIcon
+                            sx={{
+                                display: { xs: "none", md: "flex" },
+                                mb: "0.25rem",
+                                mr: 1,
+                            }}
+                        />
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component={Link}
+                            to="/"
+                            sx={{
+                                mr: 2,
+                                display: { xs: "none", md: "flex" },
+                                fontFamily: "monospace",
+                                fontWeight: 700,
+                                letterSpacing: ".3rem",
+                                color: "inherit",
+                                textDecoration: "none",
+                            }}
+                        >
+                            SoundShare
+                        </Typography>
+                        <Box
                             sx={{
                                 flexGrow: 1,
                                 display: { xs: "flex", md: "none" },
@@ -122,25 +125,24 @@ function ResponsiveAppBar() {
                                 }}
                             >
                                 {pages.map((page) => (
-									<Link
-									to={`/${page}`}
-									key={page}
-								>
-									<Button
-										onClick={handleCloseNavMenu}
-									>
-										<Typography textAlign="center">
-											{page}
-										</Typography>
-									</Button>
-								</Link>
-									
-                                    
+                                    <Link to={`/${page}`} key={page}>
+                                        <Button onClick={handleCloseNavMenu}>
+                                            <Typography textAlign="center">
+                                                {page}
+                                            </Typography>
+                                        </Button>
+                                    </Link>
                                 ))}
                             </Menu>
                         </Box>
-						<HeadphonesIcon sx={{ display: { xs: 'flex', md: 'none' }, mb: "0.1rem", mr: 1 }} />
-						<Typography
+                        <HeadphonesIcon
+                            sx={{
+                                display: { xs: "flex", md: "none" },
+                                mb: "0.1rem",
+                                mr: 1,
+                            }}
+                        />
+                        <Typography
                             variant="h5"
                             noWrap
                             component="a"
@@ -158,53 +160,75 @@ function ResponsiveAppBar() {
                         >
                             SoundShare
                         </Typography>
-						<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-							{pages.map((page) => (
-								<Button
-									component={Link}
-									to={`/${page}`}
-									key={page}
-									sx={{ my: 2, color: 'white', display: 'block' }}
-								>
-									{page}
-								</Button>
-							))}
-						</Box>
-							<Box sx={{ flexGrow: 0 }}>
-								<Tooltip title="Open settings">
-									<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-										<Avatar alt="Remy Sharp" src={user ? user.pfpUrl : ""} />
-									</IconButton>
-								</Tooltip>
-								<Menu
-									sx={{ mt: '45px' }}
-									id="menu-appbar"
-									anchorEl={anchorElUser}
-									anchorOrigin={{
-										vertical: 'top',
-										horizontal: 'right',
-									}}
-									keepMounted
-									transformOrigin={{
-										vertical: 'top',
-										horizontal: 'right',
-									}}
-									open={Boolean(anchorElUser)}
-									onClose={handleCloseUserMenu}
-								>
-									{settings.map((setting) => (
-										<MenuItem key={setting} onClick={handleCloseUserMenu}>
-											<Button onClick={() => handleProfileButtons(setting)}>
-												{setting}
-											</Button>
-										</MenuItem>
-									))}
-								</Menu>
-							</Box>
-					</Toolbar>
-				</Container>
-			</AppBar>
-		</>
-	);
+                        <Box
+                            sx={{
+                                flexGrow: 1,
+                                display: { xs: "none", md: "flex" },
+                            }}
+                        >
+                            {pages.map((page) => (
+                                <Button
+                                    component={Link}
+                                    to={`/${page}`}
+                                    key={page}
+                                    sx={{
+                                        my: 2,
+                                        color: "white",
+                                        display: "block",
+                                    }}
+                                >
+                                    {page}
+                                </Button>
+                            ))}
+                        </Box>
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Tooltip title="Open settings">
+                                <IconButton
+                                    onClick={handleOpenUserMenu}
+                                    sx={{ p: 0 }}
+                                >
+                                    <Avatar
+                                        alt="Remy Sharp"
+                                        src={user ? user.pfpUrl : ""}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                            <Menu
+                                sx={{ mt: "45px" }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                                {settings.map((setting) => (
+                                    <MenuItem
+                                        key={setting}
+                                        onClick={handleCloseUserMenu}
+                                    >
+                                        <Button
+                                            onClick={() =>
+                                                handleProfileButtons(setting)
+                                            }
+                                        >
+                                            {setting}
+                                        </Button>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </Box>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+        </>
+    );
 }
 export default ResponsiveAppBar;

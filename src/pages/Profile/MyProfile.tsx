@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import axios from "axios";
 import Player from "../../components/Player";
+import { Link } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import "./styles.css";
 import { Sound } from "../../interfaces/Sound";
@@ -13,7 +14,7 @@ const UserProfile = () => {
     const { user } = useAuthContext();
 
     useEffect(() => {
-        if (user) {
+        if (user && user.username) {
             const username = user.username;
             axios
                 .get(`${environment.API_URL}/api/v1/user/${username}`)
@@ -24,6 +25,18 @@ const UserProfile = () => {
                 .catch((err) => console.error(err));
         }
     }, []);
+    if (!user || !user.username) {
+        return (
+            <>
+                <Link to="/login">
+                    <h3>Log in</h3>
+                </Link>
+                <Link to="/signup">
+                    <h3>Sign up</h3>
+                </Link>
+            </>
+        );
+    }
     return (
         <>
             <div className="main">
