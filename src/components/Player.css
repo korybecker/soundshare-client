@@ -1,0 +1,38 @@
+.sound-title {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	box-shadow: 0px 0px 1px 0px black;
+	padding-left: 1rem;
+	height: 3rem;
+}
+
+.username {
+	color: red;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.sound-data {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 1rem;
+	height: 3rem;
+	padding-left: 1rem;
+}
+
+.user {
+	display: flex;
+	align-items: center;
+}
+
+.sound-block {
+    width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+	border-radius: 1rem;
+	margin-bottom: 1rem;
+	box-shadow: 0 0.3px 4px rgba(0,0,0,0.3);
+}
