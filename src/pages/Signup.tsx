@@ -16,7 +16,7 @@ const Signup = () => {
         password: "",
     });
 
-    const [file, setFile] = useState<string | Blob>("");
+    const [file, setFile] = useState<File | null>(null);
 
     const navigate = useNavigate();
     const { signup, error, isLoading } = useSignup();
@@ -30,8 +30,9 @@ const Signup = () => {
         data.append("name", name);
         data.append("username", username);
         data.append("password", password);
-        data.append("file", file);
-
+        if (file) {
+            data.append("file", file);
+        }
         await signup(data);
         navigate("/profile");
     };
@@ -124,16 +125,7 @@ const Signup = () => {
                                     type="file"
                                     onChange={(e) => {
                                         if (!e.target.files) return;
-                                        const file = e.target.files[0];
-                                        file.arrayBuffer().then(
-                                            (arrayBuffer) => {
-                                                const fileWithName = new File(
-                                                    [arrayBuffer],
-                                                    file.name
-                                                );
-                                                setFile(fileWithName);
-                                            }
-                                        );
+                                        setFile(e.target.files[0]);
                                     }}
                                 ></input>
                                 <Button
@@ -144,8 +136,7 @@ const Signup = () => {
                                 >
                                     Choose a profile picture <UploadIcon />
                                 </Button>
-                                {file &&
-                                    (file instanceof Blob ? file.name : file)}
+                                <strong>{file && file.name}</strong>
                             </label>
                         </div>
                     </FormControl>
