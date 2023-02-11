@@ -9,6 +9,7 @@ import { Sound } from "../interfaces/Sound";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { environment } from "../environment";
+import { saveAs } from "file-saver";
 
 import "../App.css";
 import "./Player.css";
@@ -86,23 +87,9 @@ const Player = ({
     const downloadFile = async (e: React.MouseEvent, url: string) => {
         e.preventDefault();
         try {
-            const response = await axios({
-                url,
-                method: "GET",
-                responseType: "blob", // important
-            });
-            const file = new Blob([response.data], {
-                type: "audio/mpeg",
-            });
-
-            // Create a link element to initiate the download
-            const link = document.createElement("a");
-            link.href = window.URL.createObjectURL(file);
-            link.download = sound.title;
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const response = await fetch(url);
+            const blob = await response.blob();
+            saveAs(blob, sound.title + ".mp3");
         } catch (err) {
             console.error(err);
         }
