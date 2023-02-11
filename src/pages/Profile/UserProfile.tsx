@@ -5,11 +5,21 @@ import "./styles.css";
 
 import axios from "axios";
 import Player from "../../components/Player";
+import { Sound } from "../../interfaces/Sound";
 
 const UserProfile = () => {
     const { username } = useParams();
-    const [user, setUser] = useState();
-    const [sounds, setSounds] = useState();
+    if (!username) {
+        return <h1>No user</h1>;
+    }
+    const [user, setUser] = useState<{
+        name: string;
+        pfpUrl: string;
+        userId?: string;
+        username: string;
+        token?: string;
+    }>();
+    const [sounds, setSounds] = useState<Sound[]>();
     useEffect(() => {
         axios
             .get(`${environment.API_URL}/api/v1/user/${username}`)
@@ -31,15 +41,15 @@ const UserProfile = () => {
                 <div className="half">
                     <h1 style={{ height: "1rem" }}>Sounds</h1>
                     {sounds &&
-                        sounds.map((sound, i) => {
+                        sounds.map((sound: Sound, i: number) => {
                             return (
                                 <Player
                                     key={i}
                                     sound={sound}
                                     username={username}
                                     setSounds={setSounds}
-                                    loggedInUserId={user ? user.userId : ""}
-                                    userToken={user ? user.token : ""}
+                                    loggedInUserId={user?.userId || ""}
+                                    userToken={user?.token || ""}
                                 />
                             );
                         })}

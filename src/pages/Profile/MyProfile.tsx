@@ -29,7 +29,7 @@ const UserProfile = () => {
             <div className="main">
                 <div className="half">
                     <h1>{user && `${user.username}'s Profile`}</h1>
-                    <img src={user && user.pfpUrl} alt=">///<" />
+                    <img src={user?.pfpUrl || ""} alt=">///<" />
                 </div>
                 <div className="half">
                     {sounds && sounds.length > 0 ? (
@@ -45,8 +45,8 @@ const UserProfile = () => {
                                     sound={sound}
                                     username=""
                                     setSounds={setSounds}
-                                    loggedInUserId={user ? user.userId : ""}
-                                    userToken={user ? user.token : ""}
+                                    loggedInUserId={user?.userId || ""}
+                                    userToken={user?.token || ""}
                                 />
                             );
                         })}
