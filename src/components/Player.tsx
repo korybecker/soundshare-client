@@ -87,9 +87,10 @@ const Player = ({
     const downloadFile = async (e: React.MouseEvent, url: string) => {
         e.preventDefault();
         try {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            saveAs(blob, sound.title + ".mp3");
+            // const response = await fetch(url);
+            // const blob = await response.blob();
+            // saveAs(blob, sound.title + ".mp3");
+            saveAs(sound.url, sound.title + ".mp3");
         } catch (err) {
             console.error(err);
         }
