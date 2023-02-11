@@ -92,7 +92,7 @@ const Player = ({
                 responseType: "blob", // important
             });
             const file = new Blob([response.data], {
-                type: response.headers["content-type"],
+                type: "audio/mpeg",
             });
 
             // Create a link element to initiate the download
