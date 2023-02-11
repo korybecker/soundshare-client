@@ -16,9 +16,14 @@ const About = () => {
                     <h3>Upload a Sound</h3>
                 </Link>
             ) : (
-                <Link to="/login">
-                    <h3>Login</h3>
-                </Link>
+                <>
+                    <Link to="/login">
+                        <h3>Log in</h3>
+                    </Link>
+                    <Link to="/signup">
+                        <h3>Sign up</h3>
+                    </Link>
+                </>
             )}
         </div>
     );
