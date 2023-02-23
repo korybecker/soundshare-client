@@ -5,9 +5,10 @@ import Person from "@mui/icons-material/Person";
 import Button from "@mui/material/Button";
 import Download from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Sound } from "../interfaces/Sound";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { environment } from "../environment";
 import { saveAs } from "file-saver";
 
@@ -50,14 +51,21 @@ const Player = ({
     loggedInUserId,
     setSounds,
     userToken,
+    liked,
+    onLike,
+    onUnlike,
 }: {
     sound: Sound;
     username: string;
     loggedInUserId: string;
     setSounds: (sounds: Sound[]) => void;
     userToken: string;
+    liked: boolean;
+    onLike: () => void;
+    onUnlike: () => void;
 }) => {
     const [deleting, setDeleting] = useState(false);
+
     const deleteSound = async (e: React.MouseEvent) => {
         e.preventDefault();
         setDeleting(true);
@@ -84,17 +92,51 @@ const Player = ({
         }
     };
 
-    const downloadFile = async (e: React.MouseEvent, url: string) => {
+    const downloadFile = async (e: React.MouseEvent) => {
         e.preventDefault();
         try {
-            // const response = await fetch(url);
-            // const blob = await response.blob();
-            // saveAs(blob, sound.title + ".mp3");
             saveAs(sound.url, sound.title + ".mp3");
         } catch (err) {
             console.error(err);
         }
     };
+
+    const unlike = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        console.log("unlike");
+        try {
+            const res = await axios.delete(
+                `${environment.API_URL}/api/v1/sound/${sound._id}/unlike`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                }
+            );
+            onUnlike();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const like = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post(
+                `${environment.API_URL}/api/v1/sound/${sound._id}/like`,
+                null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                }
+            );
+            onLike();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div className="sound-block">
             <Card>
@@ -117,11 +159,27 @@ const Player = ({
                             <Button
                                 component="div"
                                 color="error"
-                                onClick={(e) => downloadFile(e, sound.url)}
+                                onClick={(e) => downloadFile(e)}
                             >
                                 <Download />
                             </Button>
                         )}
+                        <Button
+                            component="div"
+                            color={liked ? "error" : "inherit"}
+                            onClick={liked ? (e) => unlike(e) : (e) => like(e)}
+                            disabled={loggedInUserId === ""}
+                        >
+                            <FavoriteBorderIcon />
+                            <div
+                                style={{
+                                    fontSize: "1rem",
+                                    marginLeft: "0.5rem",
+                                }}
+                            >
+                                {sound.likes}
+                            </div>
+                        </Button>
                     </div>
                 </div>
                 <div className="sound-data">
