@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Sound } from "../interfaces/Sound";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, memo } from "react";
 import { environment } from "../environment";
 import { saveAs } from "file-saver";
 
@@ -45,107 +45,106 @@ const convertTime = (dateString: string) => {
     return timeAgo;
 };
 
-const Player = ({
-    sound,
-    username,
-    loggedInUserId,
-    setSounds,
-    userToken,
-    liked,
-    onLike,
-    onUnlike,
-}: {
-    sound: Sound;
-    username: string;
-    loggedInUserId: string;
-    setSounds: (sounds: Sound[]) => void;
-    userToken: string;
-    liked: boolean;
-    onLike: () => void;
-    onUnlike: () => void;
-}) => {
-    const [deleting, setDeleting] = useState(false);
+const Player = memo(
+    ({
+        sound,
+        username,
+        loggedIn,
+        setSounds,
+        userToken,
+        liked,
+        onLike,
+        onUnlike,
+    }: {
+        sound: Sound;
+        username: string;
+        loggedIn: boolean;
+        setSounds: (sounds: Sound[]) => void;
+        userToken: string;
+        liked: boolean;
+        onLike: () => void;
+        onUnlike: () => void;
+    }) => {
+        const [deleting, setDeleting] = useState(false);
 
-    const deleteSound = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        setDeleting(true);
-        try {
-            const res = await axios.delete(
-                `${environment.API_URL}/api/v1/sound/${sound._id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                    data: {
-                        url: sound.url,
-                    },
-                }
-            );
-            // @ts-ignore
-            setSounds((prevSounds: Sound[]) => {
-                return prevSounds.filter((s: Sound) => s._id !== sound._id);
-            });
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setDeleting(false);
-        }
-    };
+        const deleteSound = async (e: React.MouseEvent) => {
+            e.preventDefault();
+            setDeleting(true);
+            try {
+                const res = await axios.delete(
+                    `${environment.API_URL}/api/v1/sound/${sound._id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userToken}`,
+                        },
+                        data: {
+                            url: sound.url,
+                        },
+                    }
+                );
+                // @ts-ignore
+                setSounds((prevSounds: Sound[]) => {
+                    return prevSounds.filter((s: Sound) => s._id !== sound._id);
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setDeleting(false);
+            }
+        };
 
-    const downloadFile = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        try {
-            saveAs(sound.url, sound.title + ".mp3");
-        } catch (err) {
-            console.error(err);
-        }
-    };
+        const downloadFile = async (e: React.MouseEvent) => {
+            e.preventDefault();
+            try {
+                saveAs(sound.url, sound.title + ".mp3");
+            } catch (err) {
+                console.error(err);
+            }
+        };
 
-    const unlike = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        console.log("unlike");
-        try {
-            const res = await axios.delete(
-                `${environment.API_URL}/api/v1/sound/${sound._id}/unlike`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                }
-            );
-            onUnlike();
-        } catch (err) {
-            console.error(err);
-        }
-    };
+        const unlike = async (e: React.MouseEvent) => {
+            e.preventDefault();
+            try {
+                const res = await axios.delete(
+                    `${environment.API_URL}/api/v1/sound/${sound._id}/unlike`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userToken}`,
+                        },
+                    }
+                );
+                onUnlike();
+            } catch (err) {
+                console.error(err);
+            }
+        };
 
-    const like = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        try {
-            const res = await axios.post(
-                `${environment.API_URL}/api/v1/sound/${sound._id}/like`,
-                null,
-                {
-                    headers: {
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                }
-            );
-            onLike();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+        const like = async (e: React.MouseEvent) => {
+            e.preventDefault();
+            try {
+                const res = await axios.post(
+                    `${environment.API_URL}/api/v1/sound/${sound._id}/like`,
+                    null,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userToken}`,
+                        },
+                    }
+                );
+                onLike();
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
-    return (
-        <div className="sound-block">
-            <Card>
-                <div className="sound-title">
-                    <h3 style={{ flexGrow: 1 }}>{sound.title}</h3>
-                    <div style={{ width: "auto" }}>
-                        {deleting && <strong>Deleting...</strong>}
-                        {loggedInUserId !== "" &&
-                            sound.uploadedBy === loggedInUserId && (
+        return (
+            <div className="sound-block">
+                <Card>
+                    <div className="sound-title">
+                        <h3 style={{ flexGrow: 1 }}>{sound.title}</h3>
+                        <div style={{ width: "auto" }}>
+                            {deleting && <strong>Deleting...</strong>}
+                            {loggedIn && (
                                 <Button
                                     component="div"
                                     color="error"
@@ -155,61 +154,66 @@ const Player = ({
                                     <DeleteIcon />
                                 </Button>
                             )}
-                        {loggedInUserId !== "" && (
+                            {loggedIn && (
+                                <Button
+                                    component="div"
+                                    color="error"
+                                    onClick={(e) => downloadFile(e)}
+                                >
+                                    <Download />
+                                </Button>
+                            )}
                             <Button
                                 component="div"
-                                color="error"
-                                onClick={(e) => downloadFile(e)}
+                                color={liked ? "error" : "inherit"}
+                                onClick={
+                                    liked ? (e) => unlike(e) : (e) => like(e)
+                                }
+                                disabled={!loggedIn}
                             >
-                                <Download />
+                                <FavoriteBorderIcon />
+                                <div
+                                    style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5rem",
+                                    }}
+                                >
+                                    {sound.likes}
+                                </div>
                             </Button>
-                        )}
-                        <Button
-                            component="div"
-                            color={liked ? "error" : "inherit"}
-                            onClick={liked ? (e) => unlike(e) : (e) => like(e)}
-                            disabled={loggedInUserId === ""}
-                        >
-                            <FavoriteBorderIcon />
-                            <div
-                                style={{
-                                    fontSize: "1rem",
-                                    marginLeft: "0.5rem",
-                                }}
+                        </div>
+                    </div>
+                    <div className="sound-data">
+                        <div className="user">
+                            <Person />
+                            <Link
+                                to={`/profile/${
+                                    username ? username : sound.username
+                                }`}
                             >
-                                {sound.likes}
-                            </div>
-                        </Button>
+                                <p className="username">
+                                    {username ? username : sound.username}
+                                </p>
+                            </Link>
+                        </div>
+                        <p>
+                            {convertTime(
+                                new Date(sound.createdAt).toDateString()
+                            )}
+                        </p>
                     </div>
-                </div>
-                <div className="sound-data">
-                    <div className="user">
-                        <Person />
-                        <Link
-                            to={`/profile/${
-                                username ? username : sound.username
-                            }`}
-                        >
-                            <p className="username">
-                                {username ? username : sound.username}
-                            </p>
-                        </Link>
-                    </div>
-                    <p>
-                        {convertTime(new Date(sound.createdAt).toDateString())}
-                    </p>
-                </div>
 
-                <AudioPlayer
-                    src={sound.url}
-                    showSkipControls={false}
-                    showJumpControls={false}
+                    <AudioPlayer
+                        src={sound.url}
+                        showSkipControls={false}
+                        showJumpControls={false}
 
-                    // other props here
-                />
-            </Card>
-        </div>
-    );
-};
+                        // other props here
+                    />
+                </Card>
+            </div>
+        );
+    }
+);
 
 export default Player;
