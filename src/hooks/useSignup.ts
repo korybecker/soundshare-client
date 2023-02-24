@@ -23,7 +23,6 @@ export const useSignup = () => {
                 },
             })
             .then((res) => {
-                console.log(res.data);
                 const user: User = res.data;
                 dispatch({ type: "LOGIN", payload: user });
                 setIsLoading(false);
