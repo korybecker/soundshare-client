@@ -13,19 +13,13 @@ export const AuthContext = createContext<{
         email: "",
         token: "",
         userId: "",
+        hasSounds: false,
     },
     dispatch: () => {},
 });
 
 interface State {
-    user: {
-        name: string;
-        username: string;
-        pfpUrl: string;
-        email: string;
-        token: string;
-        userId: string;
-    } | null;
+    user: User | null;
 }
 
 interface Action {
