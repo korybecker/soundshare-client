@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,7 +11,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 
 import { useNavigate } from "react-router-dom";
@@ -22,12 +21,8 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { Link } from "react-router-dom";
 
 function ResponsiveAppBar() {
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-        null
-    );
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-        null
-    );
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const { logout } = useLogout();
     const { user } = useAuthContext();
     const navigate = useNavigate();
