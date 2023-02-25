@@ -5,6 +5,7 @@ import Person from "@mui/icons-material/Person";
 import Button from "@mui/material/Button";
 import Download from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Sound } from "../interfaces/Sound";
 import { Link } from "react-router-dom";
@@ -48,18 +49,18 @@ const convertTime = (dateString: string) => {
 const Player = memo(
     ({
         sound,
-        username,
         loggedIn,
         setSounds,
+        loggedInUserId,
         userToken,
         liked,
         onLike,
         onUnlike,
     }: {
         sound: Sound;
-        username: string;
         loggedIn: boolean;
         setSounds: (sounds: Sound[]) => void;
+        loggedInUserId: string;
         userToken: string;
         liked: boolean;
         onLike: () => void;
@@ -144,16 +145,17 @@ const Player = memo(
                         <h3 style={{ flexGrow: 1 }}>{sound.title}</h3>
                         <div style={{ width: "auto" }}>
                             {deleting && <strong>Deleting...</strong>}
-                            {loggedIn && (
-                                <Button
-                                    component="div"
-                                    color="error"
-                                    onClick={(e) => deleteSound(e)}
-                                    disabled={deleting}
-                                >
-                                    <DeleteIcon />
-                                </Button>
-                            )}
+                            {loggedIn &&
+                                sound.uploadedBy === loggedInUserId && (
+                                    <Button
+                                        component="div"
+                                        color="error"
+                                        onClick={(e) => deleteSound(e)}
+                                        disabled={deleting}
+                                    >
+                                        <DeleteIcon />
+                                    </Button>
+                                )}
                             {loggedIn && (
                                 <Button
                                     component="div"
@@ -186,14 +188,8 @@ const Player = memo(
                     <div className="sound-data">
                         <div className="user">
                             <Person />
-                            <Link
-                                to={`/profile/${
-                                    username ? username : sound.username
-                                }`}
-                            >
-                                <p className="username">
-                                    {username ? username : sound.username}
-                                </p>
+                            <Link to={`/profile/${sound.username}`}>
+                                <p className="username">{sound.username}</p>
                             </Link>
                         </div>
                         <p>
