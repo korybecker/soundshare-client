@@ -4,12 +4,11 @@ import Card from "@mui/material/Card";
 import Person from "@mui/icons-material/Person";
 import Button from "@mui/material/Button";
 import Download from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Sound } from "../interfaces/Sound";
 import { Link } from "react-router-dom";
-import { useState, memo } from "react";
+import { memo } from "react";
 import { environment } from "../environment";
 import { saveAs } from "file-saver";
 
@@ -56,6 +55,7 @@ const Player = memo(
         liked,
         onLike,
         onUnlike,
+        onEditClick,
     }: {
         sound: Sound;
         loggedIn: boolean;
@@ -65,35 +65,8 @@ const Player = memo(
         liked: boolean;
         onLike: () => void;
         onUnlike: () => void;
+        onEditClick: (e: React.MouseEvent, sound: Sound) => void;
     }) => {
-        const [deleting, setDeleting] = useState(false);
-
-        const deleteSound = async (e: React.MouseEvent) => {
-            e.preventDefault();
-            setDeleting(true);
-            try {
-                const res = await axios.delete(
-                    `${environment.API_URL}/api/v1/sound/${sound._id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${userToken}`,
-                        },
-                        data: {
-                            url: sound.url,
-                        },
-                    }
-                );
-                // @ts-ignore
-                setSounds((prevSounds: Sound[]) => {
-                    return prevSounds.filter((s: Sound) => s._id !== sound._id);
-                });
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setDeleting(false);
-            }
-        };
-
         const downloadFile = async (e: React.MouseEvent) => {
             e.preventDefault();
             try {
@@ -142,18 +115,25 @@ const Player = memo(
             <div className="sound-block">
                 <Card>
                     <div className="sound-title">
-                        <h3 style={{ flexGrow: 1 }}>{sound.title}</h3>
+                        <h3
+                            style={{
+                                flex: 1,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }}
+                        >
+                            {sound.title}
+                        </h3>
                         <div style={{ width: "auto" }}>
-                            {deleting && <strong>Deleting...</strong>}
                             {loggedIn &&
                                 sound.uploadedBy === loggedInUserId && (
                                     <Button
                                         component="div"
-                                        color="error"
-                                        onClick={(e) => deleteSound(e)}
-                                        disabled={deleting}
+                                        color="warning"
+                                        onClick={(e) => onEditClick(e, sound)}
                                     >
-                                        <DeleteIcon />
+                                        <EditIcon />
                                     </Button>
                                 )}
                             {loggedIn && (
