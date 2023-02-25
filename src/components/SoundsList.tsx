@@ -37,7 +37,7 @@ const SoundsList = ({
             }
             if (user && user.token) {
                 const { data } = await axios.get(
-                    `${environment.API_URL}/api/v1/like/${user.userId}`,
+                    `${environment.API_URL}/api/v1/like/${loggedInUserId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${user.token}`,
