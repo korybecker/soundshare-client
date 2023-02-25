@@ -48,19 +48,19 @@ const Upload = () => {
         data.append("file", file);
         data.append("uploadedBy", user.userId);
 
-        axios
-            .post(`${environment.API_URL}/api/v1/sound`, data, {
+        try {
+            await axios.post(`${environment.API_URL}/api/v1/sound`, data, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                     "Content-Type": "multipart/form-data",
                 },
-            })
-            .then((res) => {
-                setIsLoading(false);
-            })
-            .catch((err) => console.error(err));
-
-        navigate("/sounds");
+            });
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+            navigate("/sounds");
+        }
     };
 
     return (
