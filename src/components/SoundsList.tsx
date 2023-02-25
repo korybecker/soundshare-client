@@ -8,30 +8,49 @@ import { environment } from "../environment";
 
 import axios from "axios";
 
-const SoundsList = ({ user }: { user: User | null }) => {
+const SoundsList = ({
+    user,
+    isProfile,
+    loggedInUserId,
+    username,
+}: {
+    user: User | null;
+    isProfile: boolean;
+    loggedInUserId: string;
+    username: string;
+}) => {
     const [sounds, setSounds] = useState<Sound[]>([]);
     const [likes, setLikes] = useState<string[]>([]);
 
-    const fetchData = async () => {
-        if (sounds && sounds.length > 0) return sounds;
-        const res = await axios.get(`${environment.API_URL}/api/v1/sound`);
-        setSounds(res.data);
-        if (user && user.token) {
-            const { data } = await axios.get(
-                `${environment.API_URL}/api/v1/like/${user.userId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
-                }
-            );
-            setLikes(data);
-        }
-    };
-
     useEffect(() => {
-        fetchData();
-    }, [user]);
+        const fetchData = async () => {
+            if (user && isProfile) {
+                const res = await axios.get(
+                    `${environment.API_URL}/api/v1/sound/user/${user.userId}`
+                );
+                setSounds(res.data);
+            } else {
+                const res = await axios.get(
+                    `${environment.API_URL}/api/v1/sound`
+                );
+                setSounds(res.data);
+            }
+            if (user && user.token) {
+                const { data } = await axios.get(
+                    `${environment.API_URL}/api/v1/like/${user.userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${user.token}`,
+                        },
+                    }
+                );
+                setLikes(data);
+            }
+        };
+        (async () => {
+            fetchData();
+        })();
+    }, [user, isProfile, username]);
 
     const handleLike = useCallback((soundId: string) => {
         setSounds((prevSounds) => {
@@ -60,19 +79,18 @@ const SoundsList = ({ user }: { user: User | null }) => {
         setLikes((prevLikes) => prevLikes.filter((id) => id !== soundId));
     }, []);
 
-    const memoizedSounds = useMemo(() => sounds, [sounds]);
     const memoizedLikes = useMemo(() => likes, [likes]);
 
     return (
         <>
-            {memoizedSounds &&
-                memoizedSounds.map((sound, i) => (
+            {sounds &&
+                sounds.map((sound, i) => (
                     <Player
                         liked={memoizedLikes.includes(sound._id)}
                         key={i}
                         sound={sound}
-                        username={user?.username || ""}
                         setSounds={setSounds}
+                        loggedInUserId={loggedInUserId}
                         loggedIn={user && user.token ? true : false}
                         userToken={user?.token || ""}
                         onLike={() => handleLike(sound._id)}
