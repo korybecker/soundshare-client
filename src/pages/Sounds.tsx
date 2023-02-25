@@ -11,7 +11,12 @@ const Sounds = () => {
         <>
             <h1 style={{ textAlign: "center" }}>Sounds</h1>
             <div className="container">
-                <SoundsList user={user} />
+                <SoundsList
+                    user={user}
+                    isProfile={false}
+                    loggedInUserId={user?.userId || ""}
+                    username={user?.username || ""}
+                />
             </div>
         </>
     );
