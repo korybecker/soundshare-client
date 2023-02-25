@@ -19,8 +19,8 @@ const Login = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await login(formState);
-        navigate("/profile");
+        const res = await login(formState);
+        navigate(`/profile/${res.username}`);
     };
 
     return (
