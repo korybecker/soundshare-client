@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { User } from "../../interfaces/User";
+import { Sound } from "../../interfaces/Sound";
+
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { environment } from "../../environment";
 
 import SoundsList from "../../components/SoundsList";
+import EditSoundForm from "../../components/EditSoundForm";
 
 import axios from "axios";
 import "./styles.css";
@@ -17,9 +20,24 @@ const UserProfile = () => {
     const [user, setUser] = useState<User | null>(null);
     const [hasSounds, setHasSounds] = useState(false);
 
+    const [showEditPopup, setShowEditPopup] = useState(false);
+    const [selectedSound, setSelectedSound] = useState<Sound | null>(null);
+    const [updated, setUpdated] = useState(false);
+
     if (!(username || authUser)) {
         return <div>no profile</div>;
     }
+
+    const handleEditClick = (e: React.MouseEvent, sound: Sound) => {
+        setSelectedSound(sound);
+        setShowEditPopup(true);
+    };
+
+    const handlePopupClose = () => {
+        setSelectedSound(null);
+        setShowEditPopup(false);
+        setUpdated(!updated);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -60,9 +78,22 @@ const UserProfile = () => {
                             isProfile={true}
                             loggedInUserId={authUser?.userId || ""}
                             username={username || ""}
+                            onEditClick={handleEditClick}
+                            updatedSound={updated}
                         />
                     )}
                 </div>
+                {showEditPopup && user && (
+                    <div className="editPopupContainer">
+                        <div className="editPopup">
+                            <EditSoundForm
+                                sound={selectedSound}
+                                user={user}
+                                onClose={handlePopupClose}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
