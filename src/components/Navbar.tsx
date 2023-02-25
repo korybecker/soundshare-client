@@ -31,7 +31,9 @@ function ResponsiveAppBar() {
     const pages = user && user.username ? ["sounds", "upload"] : ["sounds"];
 
     const settings =
-        user && user.username ? ["profile", "logout"] : ["login", "signup"];
+        user && user.username
+            ? [`profile/${user.username}`, "logout"]
+            : ["login", "signup"];
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -214,7 +216,7 @@ function ResponsiveAppBar() {
                                                 handleProfileButtons(setting)
                                             }
                                         >
-                                            {setting}
+                                            {setting.split("/")[0]}
                                         </Button>
                                     </MenuItem>
                                 ))}
