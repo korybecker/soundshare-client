@@ -18,7 +18,6 @@ function App() {
                     <Route path="/" element={<About />} />
                     <Route path="/upload" element={<Upload />} />
                     <Route path="/sounds" element={<Sounds />} />
-                    <Route path="/profile" element={<UserProfile />} />
                     <Route
                         path="/profile/:username"
                         element={<UserProfile />}
