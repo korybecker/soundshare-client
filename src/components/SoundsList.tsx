@@ -13,11 +13,15 @@ const SoundsList = ({
     isProfile,
     loggedInUserId,
     username,
+    onEditClick,
+    updatedSound,
 }: {
     user: User | null;
     isProfile: boolean;
     loggedInUserId: string;
     username: string;
+    onEditClick: (e: React.MouseEvent, sound: Sound) => void;
+    updatedSound: boolean;
 }) => {
     const [sounds, setSounds] = useState<Sound[]>([]);
     const [likes, setLikes] = useState<string[]>([]);
@@ -50,7 +54,7 @@ const SoundsList = ({
         (async () => {
             fetchData();
         })();
-    }, [user, isProfile, username]);
+    }, [user, isProfile, username, updatedSound]);
 
     const handleLike = useCallback((soundId: string) => {
         setSounds((prevSounds) => {
@@ -95,6 +99,7 @@ const SoundsList = ({
                         userToken={user?.token || ""}
                         onLike={() => handleLike(sound._id)}
                         onUnlike={() => handleUnlike(sound._id)}
+                        onEditClick={onEditClick}
                     />
                 ))}
         </>
