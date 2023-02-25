@@ -1,12 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSignup } from "../hooks/useSignup";
+
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import UploadIcon from "@mui/icons-material/Upload";
-
-import { useSignup } from "../hooks/useSignup";
-import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [formState, setFormState] = useState({
@@ -25,16 +25,24 @@ const Signup = () => {
         e.preventDefault();
         const { email, name, username, password } = formState;
 
-        const data = new FormData();
-        data.append("email", email);
-        data.append("name", name);
-        data.append("username", username);
-        data.append("password", password);
+        const user = {
+            email,
+            name,
+            username,
+            password,
+            pfpUrl: "",
+            file: file ? file : null,
+        };
+
         if (file) {
-            data.append("file", file);
+            user.file = file;
         }
-        await signup(data);
-        navigate("/profile");
+
+        const res = await signup(user);
+
+        if (res) {
+            navigate(`/profile/${res.username}`);
+        }
     };
 
     return (
