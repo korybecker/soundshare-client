@@ -69,8 +69,23 @@ const Player = memo(
     }) => {
         const downloadFile = async (e: React.MouseEvent) => {
             e.preventDefault();
+
             try {
-                saveAs(sound.url, sound.title + ".mp3");
+                const response = await axios.get(sound.url, {
+                    responseType: "blob",
+                });
+                const file = new Blob([response.data], {
+                    type: response.headers["content-type"],
+                });
+
+                // Create a link element to initiate the download
+                const link = document.createElement("a");
+                link.href = window.URL.createObjectURL(file);
+                link.download = sound.title + ".mp3";
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             } catch (err) {
                 console.error(err);
             }
