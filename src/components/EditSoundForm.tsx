@@ -115,7 +115,7 @@ const EditSoundForm = ({
                 style={{ width: "80%" }}
             >
                 <FormControl sx={{ width: "100%" }}>
-                    <FormControl margin="normal" color="error">
+                    <FormControl margin="normal">
                         <div className="formelement">
                             <InputLabel htmlFor="title">Title</InputLabel>
                             <Input
