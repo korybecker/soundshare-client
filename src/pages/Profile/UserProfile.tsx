@@ -61,11 +61,13 @@ const UserProfile = () => {
     return (
         <>
             <div className="main">
-                <div className="half">
-                    <h1>{`${user?.username}'s Profile`}</h1>
+                {user && (
+                    <div className="half">
+                        <h1>{`${user.username}'s Profile`}</h1>
 
-                    <img src={user?.pfpUrl || ""} alt=">///<" />
-                </div>
+                        <img src={user.pfpUrl || ""} alt=">///<" />
+                    </div>
+                )}
                 <div className="half">
                     {hasSounds ? (
                         <h1 style={{ height: "1rem" }}>Sounds</h1>
@@ -75,7 +77,6 @@ const UserProfile = () => {
                     {user && (
                         <SoundsList
                             user={user}
-                            isProfile={true}
                             loggedInUserId={authUser?.userId || ""}
                             username={username || ""}
                             onEditClick={handleEditClick}
