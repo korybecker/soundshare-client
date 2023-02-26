@@ -32,9 +32,8 @@ const Sounds = () => {
             <div className="container">
                 <SoundsList
                     user={user}
-                    isProfile={false}
                     loggedInUserId={user?.userId || ""}
-                    username={user?.username || ""}
+                    username=""
                     onEditClick={handleEditClick}
                     updatedSound={updated}
                 />
