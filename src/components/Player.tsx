@@ -31,15 +31,17 @@ const convertTime = (dateString: string) => {
     if (diffMinutes < 1) {
         timeAgo = "Less than a minute ago";
     } else if (diffMinutes < 60) {
-        timeAgo = `${diffMinutes} minutes ago`;
+        timeAgo =
+            `${diffMinutes} minute` + (diffMinutes === 1 ? "" : "s") + " ago";
     } else if (diffHours < 24) {
-        timeAgo = `${diffHours} hours ago`;
+        timeAgo = `${diffHours} hour` + (diffHours === 1 ? "" : "s") + " ago";
     } else if (diffDays < 30) {
-        timeAgo = `${diffDays} days ago`;
+        timeAgo = `${diffDays} day` + (diffDays === 1 ? "" : "s") + " ago";
     } else if (diffMonths < 12) {
-        timeAgo = `${diffMonths} months ago`;
+        timeAgo =
+            `${diffMonths} month` + (diffMonths === 1 ? "" : "s") + " ago";
     } else {
-        timeAgo = `${diffYears} years ago`;
+        timeAgo = `${diffYears} year` + (diffYears === 1 ? "" : "s") + " ago";
     }
     return timeAgo;
 };
@@ -189,11 +191,7 @@ const Player = memo(
                                 <p className="username">{sound.username}</p>
                             </Link>
                         </div>
-                        <p>
-                            {convertTime(
-                                new Date(sound.createdAt).toDateString()
-                            )}
-                        </p>
+                        <p>{convertTime(sound.createdAt)}</p>
                     </div>
 
                     <AudioPlayer
