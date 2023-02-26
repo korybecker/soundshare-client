@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import Card from "@mui/material/Card";
@@ -76,6 +77,9 @@ const Player = memo(
                     `${environment.API_URL}/api/v1/sound/${sound._id}/download`,
                     {
                         responseType: "arraybuffer",
+                        headers: {
+                            Authorization: `Bearer ${userToken}`,
+                        },
                     }
                 );
                 const file = new Blob([response.data], {
@@ -195,9 +199,11 @@ const Player = memo(
                     </div>
 
                     <AudioPlayer
+                        key={sound._id}
                         src={sound.url}
                         showSkipControls={false}
                         showJumpControls={false}
+                        autoPlay={false}
 
                         // other props here
                     />
