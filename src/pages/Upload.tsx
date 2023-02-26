@@ -68,7 +68,7 @@ const Upload = () => {
             <h1 style={{ textAlign: "center" }}>Upload</h1>
             <form action="#" className="signupform" onSubmit={handleSubmit}>
                 <FormControl sx={{ width: "100%" }}>
-                    <FormControl margin="normal" color="error">
+                    <FormControl margin="normal">
                         <div className="formelement">
                             <InputLabel htmlFor="title">Title</InputLabel>
                             <Input

@@ -28,7 +28,7 @@ const Login = () => {
             <h1 style={{ textAlign: "center" }}>Log in</h1>
             <form className="signupform" onSubmit={handleSubmit}>
                 <FormControl sx={{ width: "100%" }}>
-                    <FormControl margin="normal" color="error">
+                    <FormControl margin="normal">
                         <div className="formelement">
                             <InputLabel htmlFor="email">
                                 Email address

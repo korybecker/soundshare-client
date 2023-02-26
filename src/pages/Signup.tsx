@@ -17,9 +17,9 @@ const Signup = () => {
     });
 
     const [file, setFile] = useState<File | null>(null);
-
+    const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { signup, error, isLoading } = useSignup();
+    const { signup, isLoading } = useSignup();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,14 +34,33 @@ const Signup = () => {
             file: file ? file : null,
         };
 
+        if (formState.email.length === 0) {
+            return setError("Email is required");
+        }
+        if (formState.name.length === 0) {
+            return setError("Name is required");
+        }
+        if (formState.username.length === 0) {
+            return setError("Username is required");
+        }
+        if (formState.password.length === 0) {
+            return setError("Password is required");
+        }
+        if (formState.password.length < 6) {
+            return setError("Password is too short");
+        }
+
         if (file) {
             user.file = file;
         }
 
-        const res = await signup(user);
-
-        if (res) {
-            navigate(`/profile/${res.username}`);
+        try {
+            const res = await signup(user);
+        } catch (err) {
+            console.error(err);
+            return;
+        } finally {
+            navigate(`/profile/${username}`);
         }
     };
 
@@ -50,7 +69,7 @@ const Signup = () => {
             <h1 style={{ textAlign: "center" }}>Sign up</h1>
             <form className="signupform" onSubmit={handleSubmit}>
                 <FormControl sx={{ width: "100%" }}>
-                    <FormControl margin="normal" color="error">
+                    <FormControl margin="normal">
                         <div className="formelement">
                             <InputLabel htmlFor="email">
                                 Email address
