@@ -10,7 +10,6 @@ import { Sound } from "../interfaces/Sound";
 import { Link } from "react-router-dom";
 import { memo } from "react";
 import { environment } from "../environment";
-import { saveAs } from "file-saver";
 
 import "../App.css";
 import "./Player.css";
