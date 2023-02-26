@@ -46,7 +46,6 @@ const Upload = () => {
         data.append("title", title);
         data.append("description", description);
         data.append("file", file);
-        data.append("uploadedBy", user.userId);
 
         try {
             await axios.post(`${environment.API_URL}/api/v1/sound`, data, {
