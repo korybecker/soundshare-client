@@ -70,9 +70,12 @@ const Player = memo(
             e.preventDefault();
 
             try {
-                const response = await axios.get(sound.url, {
-                    responseType: "blob",
-                });
+                const response = await axios.get(
+                    `${environment.API_URL}/api/v1/sound/${sound._id}/download`,
+                    {
+                        responseType: "arraybuffer",
+                    }
+                );
                 const file = new Blob([response.data], {
                     type: response.headers["content-type"],
                 });
