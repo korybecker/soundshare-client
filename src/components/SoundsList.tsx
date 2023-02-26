@@ -10,14 +10,12 @@ import axios from "axios";
 
 const SoundsList = ({
     user,
-    isProfile,
     loggedInUserId,
     username,
     onEditClick,
     updatedSound,
 }: {
     user: User | null;
-    isProfile: boolean;
     loggedInUserId: string;
     username: string;
     onEditClick: (e: React.MouseEvent, sound: Sound) => void;
@@ -28,7 +26,7 @@ const SoundsList = ({
 
     useEffect(() => {
         const fetchData = async () => {
-            if (user && isProfile) {
+            if (user && username) {
                 const res = await axios.get(
                     `${environment.API_URL}/api/v1/sound/user/${user.userId}`
                 );
@@ -41,7 +39,7 @@ const SoundsList = ({
             }
             if (user && user.token) {
                 const { data } = await axios.get(
-                    `${environment.API_URL}/api/v1/like/${loggedInUserId}`,
+                    `${environment.API_URL}/api/v1/like/`,
                     {
                         headers: {
                             Authorization: `Bearer ${user.token}`,
@@ -54,7 +52,7 @@ const SoundsList = ({
         (async () => {
             fetchData();
         })();
-    }, [user, isProfile, username, updatedSound]);
+    }, [user, username, updatedSound]);
 
     const handleLike = useCallback((soundId: string) => {
         setSounds((prevSounds) => {
