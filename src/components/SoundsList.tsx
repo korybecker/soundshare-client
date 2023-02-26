@@ -88,20 +88,23 @@ const SoundsList = ({
     return (
         <>
             {sounds &&
-                sounds.map((sound, i) => (
-                    <Player
-                        liked={memoizedLikes.includes(sound._id)}
-                        key={i}
-                        sound={sound}
-                        setSounds={setSounds}
-                        loggedInUserId={loggedInUserId}
-                        loggedIn={user && user.token ? true : false}
-                        userToken={user?.token || ""}
-                        onLike={() => handleLike(sound._id)}
-                        onUnlike={() => handleUnlike(sound._id)}
-                        onEditClick={onEditClick}
-                    />
-                ))}
+                sounds
+                    .slice(0)
+                    .reverse()
+                    .map((sound, i) => (
+                        <Player
+                            liked={memoizedLikes.includes(sound._id)}
+                            key={i}
+                            sound={sound}
+                            setSounds={setSounds}
+                            loggedInUserId={loggedInUserId}
+                            loggedIn={user && user.token ? true : false}
+                            userToken={user?.token || ""}
+                            onLike={() => handleLike(sound._id)}
+                            onUnlike={() => handleUnlike(sound._id)}
+                            onEditClick={onEditClick}
+                        />
+                    ))}
         </>
     );
 };
