@@ -99,9 +99,14 @@ const Player = memo(
             }
         };
 
+        const [liking, setLiking] = useState(false);
+
         const unlike = async (e: React.MouseEvent) => {
             e.preventDefault();
+            if (liking) return;
             try {
+                setLiking(true);
+                onUnlike();
                 const res = await axios.delete(
                     `${environment.API_URL}/api/v1/sound/${sound._id}/unlike`,
                     {
@@ -110,15 +115,20 @@ const Player = memo(
                         },
                     }
                 );
-                onUnlike();
+                setLiking(false);
             } catch (err) {
+                setLiking(false);
+                onLike();
                 console.error(err);
             }
         };
 
         const like = async (e: React.MouseEvent) => {
             e.preventDefault();
+            if (liking) return;
             try {
+                setLiking(true);
+                onLike();
                 const res = await axios.post(
                     `${environment.API_URL}/api/v1/sound/${sound._id}/like`,
                     null,
@@ -128,9 +138,11 @@ const Player = memo(
                         },
                     }
                 );
-                onLike();
+                setLiking(false);
             } catch (error) {
+                setLiking(false);
                 console.error(error);
+                onUnlike();
             }
         };
 
