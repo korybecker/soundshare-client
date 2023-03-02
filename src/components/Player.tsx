@@ -216,7 +216,6 @@ const Player = memo(
                         showSkipControls={false}
                         showJumpControls={false}
                         autoPlay={false}
-                        style={{ backgroundColor: "#696969" }}
 
                         // other props here
                     />
