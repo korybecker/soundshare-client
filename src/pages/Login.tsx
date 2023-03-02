@@ -19,8 +19,14 @@ const Login = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const res = await login(formState);
-        navigate(`/profile/${res.username}`);
+        try {
+            const res = await login(formState);
+            if (res.token) {
+                navigate(`/profile/${res.username}`);
+            }
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
